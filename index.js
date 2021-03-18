@@ -254,7 +254,9 @@ client.connect(err => {
 
     //designer view approved post
     app.get('/approvedPostList', (req, res) => {
-        approvedPostCollection.find({})
+        const search = req.query.search;
+        
+        approvedPostCollection.find({projectName: {$regex : search}})
             .toArray((err, documents) => {
                 return res.send(documents);
             })
@@ -270,5 +272,24 @@ client.connect(err => {
                 res.send(result.deletedCount > 0);
             })
     })
+
+    //search info
+    app.get('/designersInfo', (req,res)=>{
+        const search = req.query.search;
+        
+        designerProfileCollection.find({name: {$regex : search}})
+        .toArray((err, documents)=>{
+          res.send(documents);
+        })
+      })
+
+      app.get('/customersInfo', (req,res)=>{
+        const search = req.query.search;
+        
+        addUserCollection.find({name: {$regex : search}})
+        .toArray((err, documents)=>{
+          res.send(documents);
+        })
+      })
 });
 app.listen(process.env.PORT || port);
